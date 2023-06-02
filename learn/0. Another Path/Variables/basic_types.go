@@ -19,13 +19,21 @@ func main() {
 
 	// #################################################################
 	// Same Line Declaration
-	averageOpenRate, displayMessage := .23, "is the average open rate of your messages"
+	// averageOpenRate, displayMessage := .23, "is the average open rate of your messages"
 
-	fmt.Println(averageOpenRate, displayMessage)
+	// fmt.Println(averageOpenRate, displayMessage)
 
 	// #################################################################
 	// Type Sizes
-	accountAge := 2.6
-	accountAgeInt := int(accountAge)
-	fmt.Println("Your account has existed for", accountAgeInt, "years")
+	// accountAge := 2.6
+	// accountAgeInt := int(accountAge)
+	// fmt.Println("Your account has existed for", accountAgeInt, "years")
+
+	// #################################################################
+	// Constants
+	const premiumPlanName = "Premium Plan"
+	const basicPlanName = "Basic Plan"
+
+	fmt.Println("plan:", premiumPlanName)
+	fmt.Println("plan:", basicPlanName)
 }
