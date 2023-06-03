@@ -78,34 +78,75 @@ import (
 
 // ===============================
 
-func getMaxMessagesToSend(costMultiplier float64, maxCostInPennies int) int {
-	actualCostInPennies := 1.0
-	maxMessagesToSend := 0
-	for actualCostInPennies <= float64(maxCostInPennies) {
-		maxMessagesToSend++
-		actualCostInPennies *= costMultiplier
+// func getMaxMessagesToSend(costMultiplier float64, maxCostInPennies int) int {
+// 	actualCostInPennies := 1.0
+// 	maxMessagesToSend := 0
+// 	for actualCostInPennies <= float64(maxCostInPennies) {
+// 		maxMessagesToSend++
+// 		actualCostInPennies *= costMultiplier
+// 	}
+// 	return maxMessagesToSend
+// }
+
+// // don't touch below this line
+
+// func test(costMultiplier float64, maxCostInPennies int) {
+// 	maxMessagesToSend := getMaxMessagesToSend(costMultiplier, maxCostInPennies)
+// 	fmt.Printf("Multiplier: %v\n",
+// 		costMultiplier,
+// 	)
+// 	fmt.Printf("Max cost: %v\n",
+// 		maxCostInPennies,
+// 	)
+// 	fmt.Printf("Max messages you can send: %v\n",
+// 		maxMessagesToSend,
+// 	)
+// 	fmt.Println("====================================")
+// }
+
+// func main() {
+// 	test(1.1, 5)
+// 	test(1.3, 10)
+// 	test(1.35, 25)
+// }
+
+// ################################################################
+
+func printPrimes(max int) {
+	// ?
+	for n := 2; n < max+1; n++ {
+		if n == 2 {
+			fmt.Println(n)
+			continue
+		}
+		if n%2 == 0 {
+			continue
+		}
+		isPrime := true
+		for i := 3; i*i < n+1; i++ {
+			if n%i == 0 {
+				isPrime = false
+				break
+			}
+		}
+		if !isPrime {
+			continue
+		}
+		fmt.Println(n)
 	}
-	return maxMessagesToSend
 }
 
-// don't touch below this line
+// don't edit below this line
 
-func test(costMultiplier float64, maxCostInPennies int) {
-	maxMessagesToSend := getMaxMessagesToSend(costMultiplier, maxCostInPennies)
-	fmt.Printf("Multiplier: %v\n",
-		costMultiplier,
-	)
-	fmt.Printf("Max cost: %v\n",
-		maxCostInPennies,
-	)
-	fmt.Printf("Max messages you can send: %v\n",
-		maxMessagesToSend,
-	)
-	fmt.Println("====================================")
+func test(max int) {
+	fmt.Printf("Primes up to %v:\n", max)
+	printPrimes(max)
+	fmt.Println("===============================================================")
 }
 
 func main() {
-	test(1.1, 5)
-	test(1.3, 10)
-	test(1.35, 25)
+	test(10)
+	test(20)
+	test(30)
+	
 }
