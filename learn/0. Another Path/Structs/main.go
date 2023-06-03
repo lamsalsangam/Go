@@ -161,45 +161,100 @@ import (
 // fmt.Println(lanesTruck.make)
 // ===============================
 
-type sender struct {
-	rateLimit int
-	user
+// type sender struct {
+// 	rateLimit int
+// 	user
+// }
+
+// type user struct {
+// 	name   string
+// 	number int
+// }
+
+// // don't edit below this line
+
+// func test(s sender) {
+// 	fmt.Println("Sender name:", s.name)
+// 	fmt.Println("Sender number:", s.number)
+// 	fmt.Println("Sender rateLimit:", s.rateLimit)
+// 	fmt.Println("====================================")
+// }
+
+// func main() {
+// 	test(sender{
+// 		rateLimit: 10000,
+// 		user: user{
+// 			name:   "Deborah",
+// 			number: 18055558790,
+// 		},
+// 	})
+// 	test(sender{
+// 		rateLimit: 5000,
+// 		user: user{
+// 			name:   "Sarah",
+// 			number: 19055558790,
+// 		},
+// 	})
+// 	test(sender{
+// 		rateLimit: 1000,
+// 		user: user{
+// 			name:   "Sally",
+// 			number: 19055558790,
+// 		},
+// 	})
+// }
+
+// ################################################################
+// Struct method in Go
+
+// type rect struct {
+// 	width int
+// 	height int
+//   }
+
+//   // area has a receiver of (r rect)
+//   func (r rect) area() int {
+// 	return r.width * r.height
+//   }
+
+//   r := rect{
+// 	width: 5,
+// 	height: 10,
+//   }
+
+//   fmt.Println(r.area())
+//   // prints 50
+
+// ===============================
+
+type authenticationInfo struct {
+	username string
+	password string
 }
 
-type user struct {
-	name   string
-	number int
+// ?
+func (authI authenticationInfo) getBasicAuth() string {
+	return fmt.Sprintf("Authorization: Basic %s:%s", authI.username, authI.password)
 }
 
-// don't edit below this line
+// don't touch below this line
 
-func test(s sender) {
-	fmt.Println("Sender name:", s.name)
-	fmt.Println("Sender number:", s.number)
-	fmt.Println("Sender rateLimit:", s.rateLimit)
+func test(authInfo authenticationInfo) {
+	fmt.Println(authInfo.getBasicAuth())
 	fmt.Println("====================================")
 }
 
 func main() {
-	test(sender{
-		rateLimit: 10000,
-		user: user{
-			name:   "Deborah",
-			number: 18055558790,
-		},
+	test(authenticationInfo{
+		username: "Google",
+		password: "12345",
 	})
-	test(sender{
-		rateLimit: 5000,
-		user: user{
-			name:   "Sarah",
-			number: 19055558790,
-		},
+	test(authenticationInfo{
+		username: "Bing",
+		password: "98765",
 	})
-	test(sender{
-		rateLimit: 1000,
-		user: user{
-			name:   "Sally",
-			number: 19055558790,
-		},
+	test(authenticationInfo{
+		username: "DDG",
+		password: "76921",
 	})
 }
