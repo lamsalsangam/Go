@@ -206,6 +206,7 @@ import (
 
 // ################################################################
 // Struct method in Go
+// Methods are just functions that have a receiver. A receiver is a special parameter that syntactically goes before the name of the function.
 
 // type rect struct {
 // 	width int

@@ -1,0 +1,5 @@
+# Content
+
+1. [Variables](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Variables)
+2. [Functions](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Functions)
+3. [Structs](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Structs)
