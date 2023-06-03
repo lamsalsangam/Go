@@ -91,59 +91,123 @@ import (
 
 // ################################################################
 // Interface implemetation
-type employee interface {
-	getName() string
-	getSalary() int
+// type employee interface {
+// 	getName() string
+// 	getSalary() int
+// }
+
+// type contractor struct {
+// 	name         string
+// 	hourlyPay    int
+// 	hoursPerYear int
+// }
+
+// func (c contractor) getName() string {
+// 	return c.name
+// }
+
+// // ?
+// func (c contractor) getSalary() int {
+// 	return c.hourlyPay * c.hoursPerYear
+// }
+
+// // don't touch below this line
+
+// type fullTime struct {
+// 	name   string
+// 	salary int
+// }
+
+// func (ft fullTime) getSalary() int {
+// 	return ft.salary
+// }
+
+// func (ft fullTime) getName() string {
+// 	return ft.name
+// }
+
+// func test(e employee) {
+// 	fmt.Println(e.getName(), e.getSalary())
+// 	fmt.Println("====================================")
+// }
+
+// func main() {
+// 	test(fullTime{
+// 		name:   "Jack",
+// 		salary: 50000,
+// 	})
+// 	test(contractor{
+// 		name:         "Bob",
+// 		hourlyPay:    100,
+// 		hoursPerYear: 73,
+// 	})
+// 	test(contractor{
+// 		name:         "Jill",
+// 		hourlyPay:    872,
+// 		hoursPerYear: 982,
+// 	})
+// }
+
+// ################################################################
+// Multiple Interface
+
+func (e email) cost() float64 {
+	// ?
+	if !e.isSubscribed {
+		return 0.05 * float64(len(e.body))
+	}
+	return 0.01 * float64(len(e.body))
 }
 
-type contractor struct {
-	name         string
-	hourlyPay    int
-	hoursPerYear int
-}
-
-func (c contractor) getName() string {
-	return c.name
-}
-
-// ?
-func (c contractor) getSalary() int {
-	return c.hourlyPay * c.hoursPerYear
+func (e email) print() {
+	// ?
+	fmt.Println(e.body)
 }
 
 // don't touch below this line
 
-type fullTime struct {
-	name   string
-	salary int
+type expense interface {
+	cost() float64
 }
 
-func (ft fullTime) getSalary() int {
-	return ft.salary
+type printer interface {
+	print()
 }
 
-func (ft fullTime) getName() string {
-	return ft.name
+type email struct {
+	isSubscribed bool
+	body         string
 }
 
-func test(e employee) {
-	fmt.Println(e.getName(), e.getSalary())
+func print(p printer) {
+	p.print()
+}
+
+func test(e expense, p printer) {
+	fmt.Printf("Printing with cost: $%.2f ...\n", e.cost())
+	p.print()
 	fmt.Println("====================================")
 }
 
 func main() {
-	test(fullTime{
-		name:   "Jack",
-		salary: 50000,
-	})
-	test(contractor{
-		name:         "Bob",
-		hourlyPay:    100,
-		hoursPerYear: 73,
-	})
-	test(contractor{
-		name:         "Jill",
-		hourlyPay:    872,
-		hoursPerYear: 982,
-	})
+	e := email{
+		isSubscribed: true,
+		body:         "hello there",
+	}
+	test(e, e)
+	e = email{
+		isSubscribed: false,
+		body:         "I want my money back",
+	}
+	test(e, e)
+	e = email{
+		isSubscribed: true,
+		body:         "Are you free for a chat?",
+	}
+	test(e, e)
+	e = email{
+		isSubscribed: false,
+		body:         "This meeting could have been an email",
+	}
+	test(e, e)
 }
