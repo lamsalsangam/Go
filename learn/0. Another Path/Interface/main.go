@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+// Interface should have as few methods as posssible
+
 // ###In go the interface are implemented implicitly
 // ################################################################
 // Interface in Go
