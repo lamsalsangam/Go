@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 // ###In go the interface are implemented implicitly
@@ -38,54 +37,113 @@ import (
 
 // ===============================
 
-func sendMessage(msg message) {
-	fmt.Println(msg.getMessage())
+// func sendMessage(msg message) {
+// 	fmt.Println(msg.getMessage())
+// }
+
+// type message interface {
+// 	getMessage() string
+// }
+
+// // don't edit below this line
+
+// type birthdayMessage struct {
+// 	birthdayTime  time.Time
+// 	recipientName string
+// }
+
+// func (bm birthdayMessage) getMessage() string {
+// 	return fmt.Sprintf("Hi %s, it is your birthday on %s", bm.recipientName, bm.birthdayTime.Format(time.RFC3339))
+// }
+
+// type sendingReport struct {
+// 	reportName    string
+// 	numberOfSends int
+// }
+
+// func (sr sendingReport) getMessage() string {
+// 	return fmt.Sprintf(`Your "%s" report is ready. You've sent %v messages.`, sr.reportName, sr.numberOfSends)
+// }
+
+// func test(m message) {
+// 	sendMessage(m)
+// 	fmt.Println("====================================")
+// }
+
+// func main() {
+// 	test(sendingReport{
+// 		reportName:    "First Report",
+// 		numberOfSends: 10,
+// 	})
+// 	test(birthdayMessage{
+// 		recipientName: "John Doe",
+// 		birthdayTime:  time.Date(1994, 03, 21, 0, 0, 0, 0, time.UTC),
+// 	})
+// 	test(sendingReport{
+// 		reportName:    "First Report",
+// 		numberOfSends: 10,
+// 	})
+// 	test(birthdayMessage{
+// 		recipientName: "Bill Deer",
+// 		birthdayTime:  time.Date(1934, 05, 01, 0, 0, 0, 0, time.UTC),
+// 	})
+// }
+
+// ################################################################
+// Interface implemetation
+type employee interface {
+	getName() string
+	getSalary() int
 }
 
-type message interface {
-	getMessage() string
+type contractor struct {
+	name         string
+	hourlyPay    int
+	hoursPerYear int
 }
 
-// don't edit below this line
-
-type birthdayMessage struct {
-	birthdayTime  time.Time
-	recipientName string
+func (c contractor) getName() string {
+	return c.name
 }
 
-func (bm birthdayMessage) getMessage() string {
-	return fmt.Sprintf("Hi %s, it is your birthday on %s", bm.recipientName, bm.birthdayTime.Format(time.RFC3339))
+// ?
+func (c contractor) getSalary() int {
+	return c.hourlyPay * c.hoursPerYear
 }
 
-type sendingReport struct {
-	reportName    string
-	numberOfSends int
+// don't touch below this line
+
+type fullTime struct {
+	name   string
+	salary int
 }
 
-func (sr sendingReport) getMessage() string {
-	return fmt.Sprintf(`Your "%s" report is ready. You've sent %v messages.`, sr.reportName, sr.numberOfSends)
+func (ft fullTime) getSalary() int {
+	return ft.salary
 }
 
-func test(m message) {
-	sendMessage(m)
+func (ft fullTime) getName() string {
+	return ft.name
+}
+
+func test(e employee) {
+	fmt.Println(e.getName(), e.getSalary())
 	fmt.Println("====================================")
 }
 
 func main() {
-	test(sendingReport{
-		reportName:    "First Report",
-		numberOfSends: 10,
+	test(fullTime{
+		name:   "Jack",
+		salary: 50000,
 	})
-	test(birthdayMessage{
-		recipientName: "John Doe",
-		birthdayTime:  time.Date(1994, 03, 21, 0, 0, 0, 0, time.UTC),
+	test(contractor{
+		name:         "Bob",
+		hourlyPay:    100,
+		hoursPerYear: 73,
 	})
-	test(sendingReport{
-		reportName:    "First Report",
-		numberOfSends: 10,
-	})
-	test(birthdayMessage{
-		recipientName: "Bill Deer",
-		birthdayTime:  time.Date(1934, 05, 01, 0, 0, 0, 0, time.UTC),
+	test(contractor{
+		name:         "Jill",
+		hourlyPay:    872,
+		hoursPerYear: 982,
 	})
 }
