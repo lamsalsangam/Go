@@ -42,30 +42,70 @@ import (
 
 // ################################################################
 // Omitting Conditions
-func maxMessages(thresh float64) int {
-	// ?
-	totalCost := 0.0
-	for i := 0; ; i++ {
-		totalCost += 1.0 + (0.01 * float64(i))
-		if totalCost > thresh {
-			return i
-		}
+// func maxMessages(thresh float64) int {
+// 	// ?
+// 	totalCost := 0.0
+// 	for i := 0; ; i++ {
+// 		totalCost += 1.0 + (0.01 * float64(i))
+// 		if totalCost > thresh {
+// 			return i
+// 		}
+// 	}
+// }
+
+// // don't edit below this line
+
+// func test(thresh float64) {
+// 	fmt.Printf("Threshold: %.2f\n", thresh)
+// 	max := maxMessages(thresh)
+// 	fmt.Printf("Maximum messages that can be sent: = %v\n", max)
+// 	fmt.Println("===============================================================")
+// }
+
+// func main() {
+// 	test(10.00)
+// 	test(20.00)
+// 	test(30.00)
+// 	test(40.00)
+// 	test(50.00)
+// }
+
+// ################################################################
+
+//	for CONDITION {
+//		// do some stuff while CONDITION is true
+//	  }
+
+// ===============================
+
+func getMaxMessagesToSend(costMultiplier float64, maxCostInPennies int) int {
+	actualCostInPennies := 1.0
+	maxMessagesToSend := 0
+	for actualCostInPennies <= float64(maxCostInPennies) {
+		maxMessagesToSend++
+		actualCostInPennies *= costMultiplier
 	}
+	return maxMessagesToSend
 }
 
-// don't edit below this line
+// don't touch below this line
 
-func test(thresh float64) {
-	fmt.Printf("Threshold: %.2f\n", thresh)
-	max := maxMessages(thresh)
-	fmt.Printf("Maximum messages that can be sent: = %v\n", max)
-	fmt.Println("===============================================================")
+func test(costMultiplier float64, maxCostInPennies int) {
+	maxMessagesToSend := getMaxMessagesToSend(costMultiplier, maxCostInPennies)
+	fmt.Printf("Multiplier: %v\n",
+		costMultiplier,
+	)
+	fmt.Printf("Max cost: %v\n",
+		maxCostInPennies,
+	)
+	fmt.Printf("Max messages you can send: %v\n",
+		maxMessagesToSend,
+	)
+	fmt.Println("====================================")
 }
 
 func main() {
-	test(10.00)
-	test(20.00)
-	test(30.00)
-	test(40.00)
-	test(50.00)
+	test(1.1, 5)
+	test(1.3, 10)
+	test(1.35, 25)
 }
