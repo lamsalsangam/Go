@@ -28,91 +28,91 @@ import (
 // ################################################################
 // Nested Structs
 
-type messageToSend struct {
-	message   string
-	sender    user
-	recipient user
-}
+// type messageToSend struct {
+// 	message   string
+// 	sender    user
+// 	recipient user
+// }
 
-type user struct {
-	name   string
-	number int
-}
+// type user struct {
+// 	name   string
+// 	number int
+// }
 
-func canSendMessage(mToSend messageToSend) bool {
-	if mToSend.sender.name == "" || mToSend.recipient.name == "" {
-		return false
-	}
-	if mToSend.sender.number == 0 || mToSend.recipient.number == 0 {
-		return false
-	}
-	return true
-}
+// func canSendMessage(mToSend messageToSend) bool {
+// 	if mToSend.sender.name == "" || mToSend.recipient.name == "" {
+// 		return false
+// 	}
+// 	if mToSend.sender.number == 0 || mToSend.recipient.number == 0 {
+// 		return false
+// 	}
+// 	return true
+// }
 
-// don't touch below this line
+// // don't touch below this line
 
-func test(mToSend messageToSend) {
-	fmt.Printf(`sending "%s" from %s (%v) to %s (%v)...`,
-		mToSend.message,
-		mToSend.sender.name,
-		mToSend.sender.number,
-		mToSend.recipient.name,
-		mToSend.recipient.number,
-	)
-	fmt.Println()
-	if canSendMessage(mToSend) {
-		fmt.Println("...sent!")
-	} else {
-		fmt.Println("...can't send message")
-	}
-	fmt.Println("====================================")
-}
+// func test(mToSend messageToSend) {
+// 	fmt.Printf(`sending "%s" from %s (%v) to %s (%v)...`,
+// 		mToSend.message,
+// 		mToSend.sender.name,
+// 		mToSend.sender.number,
+// 		mToSend.recipient.name,
+// 		mToSend.recipient.number,
+// 	)
+// 	fmt.Println()
+// 	if canSendMessage(mToSend) {
+// 		fmt.Println("...sent!")
+// 	} else {
+// 		fmt.Println("...can't send message")
+// 	}
+// 	fmt.Println("====================================")
+// }
 
-func main() {
-	test(messageToSend{
-		message: "you have an appointment tommorow",
-		sender: user{
-			name:   "Brenda Halafax",
-			number: 16545550987,
-		},
-		recipient: user{
-			name:   "Sally Sue",
-			number: 19035558973,
-		},
-	})
-	test(messageToSend{
-		message: "you have an event tommorow",
-		sender: user{
-			number: 16545550987,
-		},
-		recipient: user{
-			name:   "Suzie Sall",
-			number: 0,
-		},
-	})
-	test(messageToSend{
-		message: "you have an party tommorow",
-		sender: user{
-			name:   "Njorn Halafax",
-			number: 16545550987,
-		},
-		recipient: user{
-			name:   "Sally Sue",
-			number: 19035558973,
-		},
-	})
-	test(messageToSend{
-		message: "you have a birthday tommorow",
-		sender: user{
-			name:   "Eli Halafax",
-			number: 0,
-		},
-		recipient: user{
-			name:   "Whitaker Sue",
-			number: 19035558973,
-		},
-	})
-}
+// func main() {
+// 	test(messageToSend{
+// 		message: "you have an appointment tommorow",
+// 		sender: user{
+// 			name:   "Brenda Halafax",
+// 			number: 16545550987,
+// 		},
+// 		recipient: user{
+// 			name:   "Sally Sue",
+// 			number: 19035558973,
+// 		},
+// 	})
+// 	test(messageToSend{
+// 		message: "you have an event tommorow",
+// 		sender: user{
+// 			number: 16545550987,
+// 		},
+// 		recipient: user{
+// 			name:   "Suzie Sall",
+// 			number: 0,
+// 		},
+// 	})
+// 	test(messageToSend{
+// 		message: "you have an party tommorow",
+// 		sender: user{
+// 			name:   "Njorn Halafax",
+// 			number: 16545550987,
+// 		},
+// 		recipient: user{
+// 			name:   "Sally Sue",
+// 			number: 19035558973,
+// 		},
+// 	})
+// 	test(messageToSend{
+// 		message: "you have a birthday tommorow",
+// 		sender: user{
+// 			name:   "Eli Halafax",
+// 			number: 0,
+// 		},
+// 		recipient: user{
+// 			name:   "Whitaker Sue",
+// 			number: 19035558973,
+// 		},
+// 	})
+// }
 
 // ################################################################
 // Anonymous structs
@@ -136,3 +136,70 @@ func main() {
 // 		Material string
 // 	}
 // }
+
+// ################################################################
+// Embedded Structs
+// type car struct {
+// 	make  string
+// 	model string
+// }
+
+// type truck struct {
+// 	car
+// 	bedSize int
+// }
+
+// // This should be inside the function
+// lanesTruck := truck{
+// 	bedSize: 10,
+// 	car: car{
+// 		make: "Toyota",
+// 		model: "camry",
+// 	}
+// }
+
+// fmt.Println(lanesTruck.make)
+// ===============================
+
+type sender struct {
+	rateLimit int
+	user
+}
+
+type user struct {
+	name   string
+	number int
+}
+
+// don't edit below this line
+
+func test(s sender) {
+	fmt.Println("Sender name:", s.name)
+	fmt.Println("Sender number:", s.number)
+	fmt.Println("Sender rateLimit:", s.rateLimit)
+	fmt.Println("====================================")
+}
+
+func main() {
+	test(sender{
+		rateLimit: 10000,
+		user: user{
+			name:   "Deborah",
+			number: 18055558790,
+		},
+	})
+	test(sender{
+		rateLimit: 5000,
+		user: user{
+			name:   "Sarah",
+			number: 19055558790,
+		},
+	})
+	test(sender{
+		rateLimit: 1000,
+		user: user{
+			name:   "Sally",
+			number: 19055558790,
+		},
+	})
+}
