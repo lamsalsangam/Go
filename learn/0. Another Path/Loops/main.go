@@ -148,5 +148,4 @@ func main() {
 	test(10)
 	test(20)
 	test(30)
-	
 }
