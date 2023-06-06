@@ -252,59 +252,97 @@ import (
 
 // ===============================
 
-type cost struct {
-	day   int
-	value float64
-}
+// type cost struct {
+// 	day   int
+// 	value float64
+// }
 
-func getCostsByDay(costs []cost) []float64 {
+// func getCostsByDay(costs []cost) []float64 {
+// 	// ?
+// 	costsByDay := []float64{}
+// 	for i := 0; i < len(costs); i++ {
+// 		cost := costs[i]
+// 		for cost.day >= len(costsByDay) {
+// 			costsByDay = append(costsByDay, 0.0)
+// 		}
+// 		costsByDay[cost.day] += cost.value
+// 	}
+// 	return costsByDay
+// }
+
+// // dont edit below this line
+
+// func test(costs []cost) {
+// 	fmt.Printf("Creating daily buckets for %v costs...\n", len(costs))
+// 	costsByDay := getCostsByDay(costs)
+// 	fmt.Println("Costs by day:")
+// 	for i := 0; i < len(costsByDay); i++ {
+// 		fmt.Printf(" - Day %v: %.2f\n", i, costsByDay[i])
+// 	}
+// 	fmt.Println("===== END REPORT =====")
+// }
+
+// func main() {
+// 	test([]cost{
+// 		{0, 1.0},
+// 		{1, 2.0},
+// 		{1, 3.1},
+// 		{2, 2.5},
+// 		{3, 3.6},
+// 		{3, 2.7},
+// 		{4, 3.34},
+// 	})
+// 	test([]cost{
+// 		{0, 1.0},
+// 		{10, 2.0},
+// 		{3, 3.1},
+// 		{2, 2.5},
+// 		{1, 3.6},
+// 		{2, 2.7},
+// 		{4, 56.34},
+// 		{13, 2.34},
+// 		{28, 1.34},
+// 		{25, 2.34},
+// 		{30, 4.34},
+// 	})
+// }
+
+// ################################################################
+
+// SLICE OF SLICES
+// Slices can hold other slices, effectively creating a matrix, or a 2D slice.
+
+// rows := [][]int{}
+
+// ===============================
+
+func createMatrix(rows, cols int) [][]int {
 	// ?
-	costsByDay := []float64{}
-	for i := 0; i < len(costs); i++ {
-		cost := costs[i]
-		for cost.day >= len(costsByDay) {
-			costsByDay = append(costsByDay, 0.0)
+	matrix := make([][]int, 0)
+	for i := 0; i < rows; i++ {
+		row := make([]int, 0)
+		for j := 0; j < cols; j++ {
+			row = append(row, i*j)
 		}
-		costsByDay[cost.day] += cost.value
+		matrix = append(matrix, row)
 	}
-	return costsByDay
+	return matrix
 }
 
 // dont edit below this line
 
-func test(costs []cost) {
-	fmt.Printf("Creating daily buckets for %v costs...\n", len(costs))
-	costsByDay := getCostsByDay(costs)
-	fmt.Println("Costs by day:")
-	for i := 0; i < len(costsByDay); i++ {
-		fmt.Printf(" - Day %v: %.2f\n", i, costsByDay[i])
+func test(rows, cols int) {
+	fmt.Printf("Creating %v x %v matrix...\n", rows, cols)
+	matrix := createMatrix(rows, cols)
+	for i := 0; i < len(matrix); i++ {
+		fmt.Println(matrix[i])
 	}
 	fmt.Println("===== END REPORT =====")
 }
 
 func main() {
-	test([]cost{
-		{0, 1.0},
-		{1, 2.0},
-		{1, 3.1},
-		{2, 2.5},
-		{3, 3.6},
-		{3, 2.7},
-		{4, 3.34},
-	})
-	test([]cost{
-		{0, 1.0},
-		{10, 2.0},
-		{3, 3.1},
-		{2, 2.5},
-		{1, 3.6},
-		{2, 2.7},
-		{4, 56.34},
-		{13, 2.34},
-		{28, 1.34},
-		{25, 2.34},
-		{30, 4.34},
-	})
+	test(3, 3)
+	test(5, 5)
+	test(10, 10)
+	test(15, 15)
 }
-
-// ################################################################
