@@ -1,8 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // To declare an array of 10 integers:
 
@@ -316,33 +314,88 @@ import (
 
 // ===============================
 
-func createMatrix(rows, cols int) [][]int {
+// func createMatrix(rows, cols int) [][]int {
+// 	// ?
+// 	matrix := make([][]int, 0)
+// 	for i := 0; i < rows; i++ {
+// 		row := make([]int, 0)
+// 		for j := 0; j < cols; j++ {
+// 			row = append(row, i*j)
+// 		}
+// 		matrix = append(matrix, row)
+// 	}
+// 	return matrix
+// }
+
+// // dont edit below this line
+
+// func test(rows, cols int) {
+// 	fmt.Printf("Creating %v x %v matrix...\n", rows, cols)
+// 	matrix := createMatrix(rows, cols)
+// 	for i := 0; i < len(matrix); i++ {
+// 		fmt.Println(matrix[i])
+// 	}
+// 	fmt.Println("===== END REPORT =====")
+// }
+
+// func main() {
+// 	test(3, 3)
+// 	test(5, 5)
+// 	test(10, 10)
+// 	test(15, 15)
+// }
+
+// ################################################################
+
+// RANGE
+// Go provides syntactic sugar to iterate easily over elements of a slice:
+
+// for INDEX, ELEMENT := range SLICE {
+// }
+// For example:
+
+// fruits := []string{"apple", "banana", "grape"}
+// for i, fruit := range fruits {
+//     fmt.Println(i, fruit)
+// }
+// // 0 apple
+// // 1 banana
+// // 2 grape
+
+// ===============================
+
+func indexOfFirstBadWord(msg []string, badWords []string) int {
 	// ?
-	matrix := make([][]int, 0)
-	for i := 0; i < rows; i++ {
-		row := make([]int, 0)
-		for j := 0; j < cols; j++ {
-			row = append(row, i*j)
+	for i, word := range msg {
+		for _, badWord := range badWords {
+			if word == badWord {
+				return i
+			}
 		}
-		matrix = append(matrix, row)
 	}
-	return matrix
+	return -1
 }
 
-// dont edit below this line
+// don't touch below this line
 
-func test(rows, cols int) {
-	fmt.Printf("Creating %v x %v matrix...\n", rows, cols)
-	matrix := createMatrix(rows, cols)
-	for i := 0; i < len(matrix); i++ {
-		fmt.Println(matrix[i])
+func test(msg []string, badWords []string) {
+	i := indexOfFirstBadWord(msg, badWords)
+	fmt.Printf("Scanning message: %v for bad words:\n", msg)
+	for _, badWord := range badWords {
+		fmt.Println(` -`, badWord)
 	}
-	fmt.Println("===== END REPORT =====")
+	fmt.Printf("Index: %v\n", i)
+	fmt.Println("====================================")
 }
 
 func main() {
-	test(3, 3)
-	test(5, 5)
-	test(10, 10)
-	test(15, 15)
+	badWords := []string{"crap", "shoot", "dang", "frick"}
+	message := []string{"hey", "there", "john"}
+	test(message, badWords)
+
+	message = []string{"ugh", "oh", "my", "frick"}
+	test(message, badWords)
+
+	message = []string{"what", "the", "shoot", "I", "hate", "that", "crap"}
+	test(message, badWords)
 }
