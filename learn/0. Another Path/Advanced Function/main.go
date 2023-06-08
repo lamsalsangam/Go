@@ -1,8 +1,8 @@
 package main
 
 import (
-	"errors"
 	"fmt"
+	"sort"
 )
 
 // ################################################################
@@ -93,43 +93,137 @@ import (
 // getLogger takes a function that formats two strings into
 // a single string and returns a function that formats two strings but prints
 // the result instead of returning it
-func getLogger(formatter func(string, string) string) func(string, string) {
-	// ?
-	return func(s1, s2 string) {
-		fmt.Println(formatter(s1, s2))
+// func getLogger(formatter func(string, string) string) func(string, string) {
+// 	// ?
+// 	return func(s1, s2 string) {
+// 		fmt.Println(formatter(s1, s2))
+// 	}
+// }
+
+// // don't touch below this line
+
+// func test(first string, errors []error, formatter func(string, string) string) {
+// 	defer fmt.Println("====================================")
+// 	logger := getLogger(formatter)
+// 	fmt.Println("Logs:")
+// 	for _, err := range errors {
+// 		logger(first, err.Error())
+// 	}
+// }
+
+// func colonDelimit(first, second string) string {
+// 	return first + ": " + second
+// }
+// func commaDelimit(first, second string) string {
+// 	return first + ", " + second
+// }
+
+// func main() {
+// 	dbErrors := []error{
+// 		errors.New("out of memory"),
+// 		errors.New("cpu is pegged"),
+// 		errors.New("networking issue"),
+// 		errors.New("invalid syntax"),
+// 	}
+// 	test("Error on database server", dbErrors, colonDelimit)
+
+// 	mailErrors := []error{
+// 		errors.New("email too large"),
+// 		errors.New("non alphanumeric symbols found"),
+// 	}
+// 	test("Error on mail server", mailErrors, commaDelimit)
+// }
+
+// ################################################################
+// DEFER
+// The defer keyword is a fairly unique feature of Go. It allows a function to be executed automatically just before its enclosing function returns.
+
+// The deferred call's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.
+
+// ===============================
+
+const (
+	logDeleted  = "user deleted"
+	logNotFound = "user not found"
+	logAdmin    = "admin deleted"
+)
+
+func logAndDelete(users map[string]user, name string) (log string) {
+	defer delete(users, name)
+	user, ok := users[name]
+	if !ok {
+		delete(users, name)
+		return logNotFound
 	}
+	if user.admin {
+		return logAdmin
+	}
+	delete(users, name)
+	return logDeleted
 }
 
 // don't touch below this line
 
-func test(first string, errors []error, formatter func(string, string) string) {
-	defer fmt.Println("====================================")
-	logger := getLogger(formatter)
-	fmt.Println("Logs:")
-	for _, err := range errors {
-		logger(first, err.Error())
-	}
+type user struct {
+	name   string
+	number int
+	admin  bool
 }
 
-func colonDelimit(first, second string) string {
-	return first + ": " + second
-}
-func commaDelimit(first, second string) string {
-	return first + ", " + second
+func test(users map[string]user, name string) {
+	fmt.Printf("Attempting to delete %s...\n", name)
+	defer fmt.Println("====================================")
+	log := logAndDelete(users, name)
+	fmt.Println("Log:", log)
 }
 
 func main() {
-	dbErrors := []error{
-		errors.New("out of memory"),
-		errors.New("cpu is pegged"),
-		errors.New("networking issue"),
-		errors.New("invalid syntax"),
+	users := map[string]user{
+		"john": {
+			name:   "john",
+			number: 18965554631,
+			admin:  true,
+		},
+		"elon": {
+			name:   "elon",
+			number: 19875556452,
+			admin:  true,
+		},
+		"breanna": {
+			name:   "breanna",
+			number: 98575554231,
+			admin:  false,
+		},
+		"kade": {
+			name:   "kade",
+			number: 10765557221,
+			admin:  false,
+		},
 	}
-	test("Error on database server", dbErrors, colonDelimit)
 
-	mailErrors := []error{
-		errors.New("email too large"),
-		errors.New("non alphanumeric symbols found"),
+	fmt.Println("Initial users:")
+	usersSorted := []string{}
+	for name := range users {
+		usersSorted = append(usersSorted, name)
 	}
-	test("Error on mail server", mailErrors, commaDelimit)
+	sort.Strings(usersSorted)
+	for _, name := range usersSorted {
+		fmt.Println(" -", name)
+	}
+	fmt.Println("====================================")
+
+	test(users, "john")
+	test(users, "santa")
+	test(users, "kade")
+
+	fmt.Println("Final users:")
+	usersSorted = []string{}
+	for name := range users {
+		usersSorted = append(usersSorted, name)
+	}
+	sort.Strings(usersSorted)
+	for _, name := range usersSorted {
+		fmt.Println(" -", name)
+	}
+	fmt.Println("====================================")
 }
