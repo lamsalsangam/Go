@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // ################################################################
 
@@ -35,48 +38,98 @@ import "fmt"
 
 // ===============================
 
-func getFormattedMessages(messages []string, formatter func(string) string) []string {
-	formattedMessages := []string{}
-	for _, message := range messages {
-		formattedMessages = append(formattedMessages, formatter(message))
+// func getFormattedMessages(messages []string, formatter func(string) string) []string {
+// 	formattedMessages := []string{}
+// 	for _, message := range messages {
+// 		formattedMessages = append(formattedMessages, formatter(message))
+// 	}
+// 	return formattedMessages
+// }
+
+// // don't touch below this line
+
+// func addSignature(message string) string {
+// 	return message + " Kind regards."
+// }
+
+// func addGreeting(message string) string {
+// 	return "Hello! " + message
+// }
+
+// func test(messages []string, formatter func(string) string) {
+// 	defer fmt.Println("====================================")
+// 	formattedMessages := getFormattedMessages(messages, formatter)
+// 	if len(formattedMessages) != len(messages) {
+// 		fmt.Println("The number of messages returned is incorrect.")
+// 		return
+// 	}
+// 	for i, message := range messages {
+// 		formatted := formattedMessages[i]
+// 		fmt.Printf(" * %s -> %s\n", message, formatted)
+// 	}
+// }
+
+// func main() {
+// 	test([]string{
+// 		"Thanks for getting back to me.",
+// 		"Great to see you again.",
+// 		"I would love to hang out this weekend.",
+// 		"Got any hot stock tips?",
+// 	}, addSignature)
+// 	test([]string{
+// 		"Thanks for getting back to me.",
+// 		"Great to see you again.",
+// 		"I would love to hang out this weekend.",
+// 		"Got any hot stock tips?",
+// 	}, addGreeting)
+// }
+
+// ################################################################
+// CURRYING
+// Function currying is the practice of writing a function that takes a function (or functions) as input, and returns a new function.
+
+// ===============================
+
+// getLogger takes a function that formats two strings into
+// a single string and returns a function that formats two strings but prints
+// the result instead of returning it
+func getLogger(formatter func(string, string) string) func(string, string) {
+	// ?
+	return func(s1, s2 string) {
+		fmt.Println(formatter(s1, s2))
 	}
-	return formattedMessages
 }
 
 // don't touch below this line
 
-func addSignature(message string) string {
-	return message + " Kind regards."
-}
-
-func addGreeting(message string) string {
-	return "Hello! " + message
-}
-
-func test(messages []string, formatter func(string) string) {
+func test(first string, errors []error, formatter func(string, string) string) {
 	defer fmt.Println("====================================")
-	formattedMessages := getFormattedMessages(messages, formatter)
-	if len(formattedMessages) != len(messages) {
-		fmt.Println("The number of messages returned is incorrect.")
-		return
+	logger := getLogger(formatter)
+	fmt.Println("Logs:")
+	for _, err := range errors {
+		logger(first, err.Error())
 	}
-	for i, message := range messages {
-		formatted := formattedMessages[i]
-		fmt.Printf(" * %s -> %s\n", message, formatted)
-	}
+}
+
+func colonDelimit(first, second string) string {
+	return first + ": " + second
+}
+func commaDelimit(first, second string) string {
+	return first + ", " + second
 }
 
 func main() {
-	test([]string{
-		"Thanks for getting back to me.",
-		"Great to see you again.",
-		"I would love to hang out this weekend.",
-		"Got any hot stock tips?",
-	}, addSignature)
-	test([]string{
-		"Thanks for getting back to me.",
-		"Great to see you again.",
-		"I would love to hang out this weekend.",
-		"Got any hot stock tips?",
-	}, addGreeting)
+	dbErrors := []error{
+		errors.New("out of memory"),
+		errors.New("cpu is pegged"),
+		errors.New("networking issue"),
+		errors.New("invalid syntax"),
+	}
+	test("Error on database server", dbErrors, colonDelimit)
+
+	mailErrors := []error{
+		errors.New("email too large"),
+		errors.New("non alphanumeric symbols found"),
+	}
+	test("Error on mail server", mailErrors, commaDelimit)
 }
