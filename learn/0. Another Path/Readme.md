@@ -9,3 +9,4 @@
 7. [Slices](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Slices)
 8. [Maps](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Maps)
 9. [Advanced Function](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Advanced%20Function)
+10. [Pointers](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Pointers)
