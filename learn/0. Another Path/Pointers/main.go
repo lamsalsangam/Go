@@ -1,9 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"strings"
-)
+import "fmt"
 
 // ################################################################
 
@@ -109,50 +106,133 @@ import (
 
 // If a pointer points to nothing (the zero value of the pointer type) then dereferencing it will cause a runtime error (a panic) that crashes the program. Generally speaking, whenever you're dealing with pointers you should check if it's nil before trying to dereference it.
 
-func removeProfanity(message *string) {
-	// ?
-	if message == nil {
-		return
-	}
-	messageVal := *message
-	messageVal = strings.ReplaceAll(messageVal, "dang", "****")
-	messageVal = strings.ReplaceAll(messageVal, "shoot", "*****")
-	messageVal = strings.ReplaceAll(messageVal, "heck", "****")
-	*message = messageVal
+// ===============================
+
+// func removeProfanity(message *string) {
+// 	// ?
+// 	if message == nil {
+// 		return
+// 	}
+// 	messageVal := *message
+// 	messageVal = strings.ReplaceAll(messageVal, "dang", "****")
+// 	messageVal = strings.ReplaceAll(messageVal, "shoot", "*****")
+// 	messageVal = strings.ReplaceAll(messageVal, "heck", "****")
+// 	*message = messageVal
+// }
+
+// // don't touch below this line
+
+// func test(messages []string) {
+// 	for _, message := range messages {
+// 		if message == "" {
+// 			removeProfanity(nil)
+// 			fmt.Println("nil message detected")
+// 		} else {
+// 			removeProfanity(&message)
+// 			fmt.Println(message)
+// 		}
+// 	}
+// }
+
+// func main() {
+// 	messages := []string{
+// 		"well shoot, this is awful",
+// 		"",
+// 		"dang robots",
+// 		"dang them to heck",
+// 		"",
+// 	}
+
+// 	messages2 := []string{
+// 		"well shoot",
+// 		"",
+// 		"Allan is going straight to heck",
+// 		"dang... that's a tough break",
+// 		"",
+// 	}
+
+// 	test(messages)
+// 	test(messages2)
+
+// }
+
+// ################################################################
+// POINTER RECEIVERS
+// A receiver type on a method can be a pointer.
+
+// Methods with pointer receivers can modify the value to which the receiver points. Since methods often need to modify their receiver, pointer receivers are more common than value receivers.
+
+// ===============================
+
+// POINTER RECEIVER CODE
+// Methods with pointer receivers don't require that a pointer is used to call the method. The pointer will automatically be derived from the value.
+
+// type circle struct {
+// 	x int
+// 	y int
+//     radius int
+// }
+
+// func (c *circle) grow(){
+//     c.radius *= 2
+// }
+
+// func main(){
+//     c := circle{
+//         x: 1,
+//         y: 2,
+//         radius: 4,
+//     }
+
+//     // notice c is not a pointer in the calling function
+//     // but the method still gains access to a pointer to c
+//     c.grow()
+//     fmt.Println(c.radius)
+//     // prints 8
+// }
+
+// ===============================
+
+func (e *email) setMessage(newMessage string) {
+	e.message = newMessage
 }
 
-// don't touch below this line
+// don't edit below this line
 
-func test(messages []string) {
-	for _, message := range messages {
-		if message == "" {
-			removeProfanity(nil)
-			fmt.Println("nil message detected")
-		} else {
-			removeProfanity(&message)
-			fmt.Println(message)
-		}
-	}
+type email struct {
+	message     string
+	fromAddress string
+	toAddress   string
+}
+
+func test(e *email, newMessage string) {
+	fmt.Println("-- before --")
+	e.print()
+	fmt.Println("-- end before --")
+	e.setMessage("this is my second draft")
+	fmt.Println("-- after --")
+	e.print()
+	fmt.Println("-- end after --")
+	fmt.Println("==========================")
+}
+
+func (e email) print() {
+	fmt.Println("message:", e.message)
+	fmt.Println("fromAddress:", e.fromAddress)
+	fmt.Println("toAddress:", e.toAddress)
 }
 
 func main() {
-	messages := []string{
-		"well shoot, this is awful",
-		"",
-		"dang robots",
-		"dang them to heck",
-		"",
-	}
+	test(&email{
+		message:     "this is my first draft",
+		fromAddress: "sandra@mailio-test.com",
+		toAddress:   "bullock@mailio-test.com",
+	}, "this is my second draft")
 
-	messages2 := []string{
-		"well shoot",
-		"",
-		"Allan is going straight to heck",
-		"dang... that's a tough break",
-		"",
-	}
-
-	test(messages)
-	test(messages2)
+	test(&email{
+		message:     "this is my third draft",
+		fromAddress: "sandra@mailio-test.com",
+		toAddress:   "bullock@mailio-test.com",
+	}, "this is my fourth draft")
 
 }
