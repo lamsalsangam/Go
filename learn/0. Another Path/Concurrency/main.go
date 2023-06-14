@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 // ################################################################
@@ -167,37 +166,82 @@ import (
 
 // ===============================
 
-func waitForDbs(numDBs int, dbChan chan struct{}) {
-	// ?
-	for i := 0; i < numDBs; i++ {
-		<-dbChan
+// func waitForDbs(numDBs int, dbChan chan struct{}) {
+// 	// ?
+// 	for i := 0; i < numDBs; i++ {
+// 		<-dbChan
+// 	}
+// }
+
+// // don't touch below this line
+
+// func test(numDBs int) {
+// 	dbChan := getDatabasesChannel(numDBs)
+// 	fmt.Printf("Waiting for %v databases...\n", numDBs)
+// 	waitForDbs(numDBs, dbChan)
+// 	time.Sleep(time.Millisecond * 10) // ensure the last print statement happens
+// 	fmt.Println("All databases are online!")
+// 	fmt.Println("=====================================")
+// }
+
+// func main() {
+// 	test(3)
+// 	test(4)
+// 	test(5)
+// }
+
+// func getDatabasesChannel(numDBs int) chan struct{} {
+// 	ch := make(chan struct{})
+// 	go func() {
+// 		for i := 0; i < numDBs; i++ {
+// 			ch <- struct{}{}
+// 			fmt.Printf("Database %v is online\n", i+1)
+// 		}
+// 	}()
+// 	return ch
+// }
+
+// ################################################################
+// BUFFERED CHANNELS
+// Channels can optionally be buffered.
+
+// CREATING A CHANNEL WITH A BUFFER
+// You can provide a buffer length as the second argument to make() to create a buffered channel:
+
+// ch := make(chan int, 100)
+// Sending on a buffered channel only blocks when the buffer is full.
+
+// Receiving blocks only when the buffer is empty.
+
+// ===============================
+
+func addEmailsToQueue(emails []string) chan string {
+	emailsToSend := make(chan string, len(emails))
+	for _, email := range emails {
+		emailsToSend <- email
+	}
+	return emailsToSend
+}
+
+// TEST SUITE - Don't Touch Below This Line
+
+func sendEmails(batchSize int, ch chan string) {
+	for i := 0; i < batchSize; i++ {
+		email := <-ch
+		fmt.Println("Sending email:", email)
 	}
 }
 
-// don't touch below this line
-
-func test(numDBs int) {
-	dbChan := getDatabasesChannel(numDBs)
-	fmt.Printf("Waiting for %v databases...\n", numDBs)
-	waitForDbs(numDBs, dbChan)
-	time.Sleep(time.Millisecond * 10) // ensure the last print statement happens
-	fmt.Println("All databases are online!")
-	fmt.Println("=====================================")
+func test(emails ...string) {
+	fmt.Printf("Adding %v emails to queue...\n", len(emails))
+	ch := addEmailsToQueue(emails)
+	fmt.Println("Sending emails...")
+	sendEmails(len(emails), ch)
+	fmt.Println("==========================================")
 }
 
 func main() {
-	test(3)
-	test(4)
-	test(5)
-}
-
-func getDatabasesChannel(numDBs int) chan struct{} {
-	ch := make(chan struct{})
-	go func() {
-		for i := 0; i < numDBs; i++ {
-			ch <- struct{}{}
-			fmt.Printf("Database %v is online\n", i+1)
-		}
-	}()
-	return ch
+	test("Hello John, tell Kathy I said hi", "Whazzup bruther")
+	test("I find that hard to believe.", "When? I don't know if I can", "What time are you thinking?")
+	test("She says hi!", "Yeah its tomorrow. So we're good.", "Cool see you then!", "Bye!")
 }
