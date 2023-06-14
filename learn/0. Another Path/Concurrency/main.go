@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 // ################################################################
@@ -215,33 +216,98 @@ import (
 
 // ===============================
 
-func addEmailsToQueue(emails []string) chan string {
-	emailsToSend := make(chan string, len(emails))
-	for _, email := range emails {
-		emailsToSend <- email
+// func addEmailsToQueue(emails []string) chan string {
+// 	emailsToSend := make(chan string, len(emails))
+// 	for _, email := range emails {
+// 		emailsToSend <- email
+// 	}
+// 	return emailsToSend
+// }
+
+// // TEST SUITE - Don't Touch Below This Line
+
+// func sendEmails(batchSize int, ch chan string) {
+// 	for i := 0; i < batchSize; i++ {
+// 		email := <-ch
+// 		fmt.Println("Sending email:", email)
+// 	}
+// }
+
+// func test(emails ...string) {
+// 	fmt.Printf("Adding %v emails to queue...\n", len(emails))
+// 	ch := addEmailsToQueue(emails)
+// 	fmt.Println("Sending emails...")
+// 	sendEmails(len(emails), ch)
+// 	fmt.Println("==========================================")
+// }
+
+// func main() {
+// 	test("Hello John, tell Kathy I said hi", "Whazzup bruther")
+// 	test("I find that hard to believe.", "When? I don't know if I can", "What time are you thinking?")
+// 	test("She says hi!", "Yeah its tomorrow. So we're good.", "Cool see you then!", "Bye!")
+// }
+
+// ################################################################
+
+// CLOSING CHANNELS IN GO
+// Channels can be explicitly closed by a sender:
+
+// ch := make(chan int)
+
+// // do some stuff with the channel
+
+// close(ch)
+// CHECKING IF A CHANNEL IS CLOSED
+// Similar to the ok value when accessing data in a map, receivers can check the ok value when receiving from a channel to test if a channel was closed.
+
+// v, ok := <-ch
+// ok is false if the channel is empty and closed.
+
+// DON'T SEND ON A CLOSED CHANNEL
+// Sending on a closed channel will cause a panic. A panic on the main goroutine will cause the entire program to crash, and a panic in any other goroutine will cause that goroutine to crash.
+
+// Closing isn't necessary. There's nothing wrong with leaving channels open, they'll still be garbage collected if they're unused. You should close channels to indicate explicitly to a receiver that nothing else is going to come across.
+
+// ===============================
+
+func countReports(numSentCh chan int) int {
+	// ?
+	total := 0
+	for {
+		numSent, ok := <-numSentCh
+		if !ok {
+			break
+		}
+		total += numSent
 	}
-	return emailsToSend
+	return total
 }
 
-// TEST SUITE - Don't Touch Below This Line
+// don't touch below this line
 
-func sendEmails(batchSize int, ch chan string) {
-	for i := 0; i < batchSize; i++ {
-		email := <-ch
-		fmt.Println("Sending email:", email)
-	}
-}
+func test(numBatches int) {
+	numSentCh := make(chan int)
+	go sendReports(numBatches, numSentCh)
 
-func test(emails ...string) {
-	fmt.Printf("Adding %v emails to queue...\n", len(emails))
-	ch := addEmailsToQueue(emails)
-	fmt.Println("Sending emails...")
-	sendEmails(len(emails), ch)
-	fmt.Println("==========================================")
+	fmt.Println("Start counting...")
+	numReports := countReports(numSentCh)
+	fmt.Printf("%v reports sent!\n", numReports)
+	fmt.Println("========================")
 }
 
 func main() {
-	test("Hello John, tell Kathy I said hi", "Whazzup bruther")
-	test("I find that hard to believe.", "When? I don't know if I can", "What time are you thinking?")
-	test("She says hi!", "Yeah its tomorrow. So we're good.", "Cool see you then!", "Bye!")
+	test(3)
+	test(4)
+	test(5)
+	test(6)
+}
+
+func sendReports(numBatches int, ch chan int) {
+	for i := 0; i < numBatches; i++ {
+		numReports := i*23 + 32%17
+		ch <- numReports
+		fmt.Printf("Sent batch of %v reports\n", numReports)
+		time.Sleep(time.Millisecond * 100)
+	}
+	close(ch)
 }
