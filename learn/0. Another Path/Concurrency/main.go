@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 )
 
@@ -324,38 +325,152 @@ import (
 
 // ===============================
 
-func concurrrentFib(n int) {
+// func concurrrentFib(n int) {
+// 	// ?
+// 	chInts := make(chan int)
+// 	go func() {
+// 		fibonacci(n, chInts)
+// 	}()
+// 	for v := range chInts {
+// 		fmt.Println(v)
+// 	}
+// }
+
+// // don't touch below this line
+
+// func test(n int) {
+// 	fmt.Printf("Printing %v numbers...\n", n)
+// 	concurrrentFib(n)
+// 	fmt.Println("==============================")
+// }
+
+// func main() {
+// 	test(10)
+// 	test(5)
+// 	test(20)
+// 	test(13)
+// }
+
+// func fibonacci(n int, ch chan int) {
+// 	x, y := 0, 1
+// 	for i := 0; i < n; i++ {
+// 		ch <- x
+// 		x, y = y, x+y
+// 		time.Sleep(time.Millisecond * 10)
+// 	}
+// 	close(ch)
+// }
+
+// ################################################################
+
+// SELECT
+// Sometimes we have a single goroutine listening to multiple channels and want to process data in the order it comes through each channel.
+
+// A select statement is used to listen to multiple channels at the same time. It is similar to a switch statement but for channels.
+
+// select {
+//   case i, ok := <- chInts:
+//     fmt.Println(i)
+//   case s, ok := <- chStrings:
+//     fmt.Println(s)
+// }
+// The first channel with a value ready to be received will fire and its body will execute. If multiple channels are ready at the same time one is chosen randomly. The ok variable in the example above refers to whether or not the channel has been closed by the sender yet.
+
+// ===============================
+
+func logMessages(chEmails, chSms chan string) {
 	// ?
-	chInts := make(chan int)
-	go func() {
-		fibonacci(n, chInts)
-	}()
-	for v := range chInts {
-		fmt.Println(v)
+	for {
+		select {
+		case email, ok := <-chEmails:
+			if !ok {
+				return
+			}
+			logEmail(email)
+		case sms, ok := <-chSms:
+			if !ok {
+				return
+			}
+			logSms(sms)
+		}
 	}
 }
 
 // don't touch below this line
 
-func test(n int) {
-	fmt.Printf("Printing %v numbers...\n", n)
-	concurrrentFib(n)
-	fmt.Println("==============================")
+func logSms(sms string) {
+	fmt.Println("SMS:", sms)
+}
+
+func logEmail(email string) {
+	fmt.Println("Email:", email)
+}
+
+func test(sms []string, emails []string) {
+	fmt.Println("Starting...")
+
+	chSms, chEmails := sendToLogger(sms, emails)
+
+	logMessages(chEmails, chSms)
+	fmt.Println("===============================")
 }
 
 func main() {
-	test(10)
-	test(5)
-	test(20)
-	test(13)
+	rand.Seed(0)
+	test(
+		[]string{
+			"hi friend",
+			"What's going on?",
+			"Welcome to the business",
+			"I'll pay you to be my friend",
+		},
+		[]string{
+			"Will you make your appointment?",
+			"Let's be friends",
+			"What are you doing?",
+			"I can't believe you've done this.",
+		},
+	)
+	test(
+		[]string{
+			"this song slaps hard",
+			"yooo hoooo",
+			"i'm a big fan",
+		},
+		[]string{
+			"What do you think of this song?",
+			"I hate this band",
+			"Can you believe this song?",
+		},
+	)
 }
 
-func fibonacci(n int, ch chan int) {
-	x, y := 0, 1
-	for i := 0; i < n; i++ {
-		ch <- x
-		x, y = y, x+y
-		time.Sleep(time.Millisecond * 10)
-	}
-	close(ch)
+func sendToLogger(sms, emails []string) (chSms, chEmails chan string) {
+	chSms = make(chan string)
+	chEmails = make(chan string)
+	go func() {
+		for i := 0; i < len(sms) && i < len(emails); i++ {
+			done := make(chan struct{})
+			s := sms[i]
+			e := emails[i]
+			t1 := time.Millisecond * time.Duration(rand.Intn(1000))
+			t2 := time.Millisecond * time.Duration(rand.Intn(1000))
+			go func() {
+				time.Sleep(t1)
+				chSms <- s
+				done <- struct{}{}
+			}()
+			go func() {
+				time.Sleep(t2)
+				chEmails <- e
+				done <- struct{}{}
+			}()
+			<-done
+			<-done
+			time.Sleep(10 * time.Millisecond)
+		}
+		close(chSms)
+		close(chEmails)
+	}()
+	return chSms, chEmails
 }
