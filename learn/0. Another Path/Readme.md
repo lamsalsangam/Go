@@ -11,3 +11,4 @@
 9. [Advanced Function](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Advanced%20Function)
 10. [Pointers](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Pointers)
 11. [Concurrency and Channels](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Concurrency)
+12. [Mutexes](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Mutexes)
