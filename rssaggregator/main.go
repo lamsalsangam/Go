@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
+	"github.com/lamsalsangam/Go/tree/master/rssaggregator/vendor/github.com/joho/godotenv"
 )
 
 func main() {
