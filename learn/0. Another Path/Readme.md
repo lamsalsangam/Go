@@ -12,3 +12,4 @@
 10. [Pointers](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Pointers)
 11. [Concurrency and Channels](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Concurrency)
 12. [Mutexes](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Mutexes)
+13. [Generics](https://github.com/lamsalsangam/Go/tree/master/learn/0.%20Another%20Path/Generics)
