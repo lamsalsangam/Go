@@ -1,10 +1,6 @@
 package main
 
-import (
-	"errors"
-	"fmt"
-	"time"
-)
+import "fmt"
 
 // ################################################################
 
@@ -141,113 +137,325 @@ import (
 
 // ===============================
 
-func chargeForLineItem[T lineItem](newItem T, oldItems []T, balance float64) ([]T, float64, error) {
-	// ?
-	newBalance := balance - newItem.GetCost()
-	if newBalance < 0.0 {
-		return nil, 0.0, errors.New("Insufficient funds")
-	}
-	oldItems = append(oldItems, newItem)
-	return oldItems, newBalance, nil
+// func chargeForLineItem[T lineItem](newItem T, oldItems []T, balance float64) ([]T, float64, error) {
+// 	// ?
+// 	newBalance := balance - newItem.GetCost()
+// 	if newBalance < 0.0 {
+// 		return nil, 0.0, errors.New("Insufficient funds")
+// 	}
+// 	oldItems = append(oldItems, newItem)
+// 	return oldItems, newBalance, nil
+// }
+
+// // don't edit below this line
+
+// type lineItem interface {
+// 	GetCost() float64
+// 	GetName() string
+// }
+
+// type subscription struct {
+// 	userEmail string
+// 	startDate time.Time
+// 	interval  string
+// }
+
+// func (s subscription) GetName() string {
+// 	return fmt.Sprintf("%s subscription", s.interval)
+// }
+
+// func (s subscription) GetCost() float64 {
+// 	if s.interval == "monthly" {
+// 		return 25.00
+// 	}
+// 	if s.interval == "yearly" {
+// 		return 250.00
+// 	}
+// 	return 0.0
+// }
+
+// type oneTimeUsagePlan struct {
+// 	userEmail        string
+// 	numEmailsAllowed int
+// }
+
+// func (otup oneTimeUsagePlan) GetName() string {
+// 	return fmt.Sprintf("one time usage plan with %v emails", otup.numEmailsAllowed)
+// }
+
+// func (otup oneTimeUsagePlan) GetCost() float64 {
+// 	const costPerEmail = 0.03
+// 	return float64(otup.numEmailsAllowed) * costPerEmail
+// }
+
+// func main() {
+// 	test(subscription{
+// 		userEmail: "john@example.com",
+// 		startDate: time.Now().UTC(),
+// 		interval:  "yearly",
+// 	},
+// 		[]subscription{},
+// 		1000.00,
+// 	)
+// 	test(subscription{
+// 		userEmail: "jane@example.com",
+// 		startDate: time.Now().UTC(),
+// 		interval:  "monthly",
+// 	},
+// 		[]subscription{
+// 			{
+// 				userEmail: "jane@example.com",
+// 				startDate: time.Now().UTC().Add(-time.Hour * 24 * 7),
+// 				interval:  "monthly",
+// 			},
+// 			{
+// 				userEmail: "jane@example.com",
+// 				startDate: time.Now().UTC().Add(-time.Hour * 24 * 7 * 52 * 2),
+// 				interval:  "yearly",
+// 			},
+// 		},
+// 		686.20,
+// 	)
+// 	test(oneTimeUsagePlan{
+// 		userEmail:        "dillon@example.com",
+// 		numEmailsAllowed: 5000,
+// 	},
+// 		[]oneTimeUsagePlan{},
+// 		756.20,
+// 	)
+// 	test(oneTimeUsagePlan{
+// 		userEmail:        "dalton@example.com",
+// 		numEmailsAllowed: 100000,
+// 	},
+// 		[]oneTimeUsagePlan{
+// 			{
+// 				userEmail:        "dalton@example.com",
+// 				numEmailsAllowed: 34200,
+// 			},
+// 		},
+// 		32.20,
+// 	)
+// }
+
+// func test[T lineItem](newItem T, oldItems []T, balance float64) {
+// 	fmt.Println(" --- ")
+// 	fmt.Printf("Charging customer for a '%s', current balance is %v...\n", newItem.GetName(), balance)
+// 	newItems, newBalance, err := chargeForLineItem(newItem, oldItems, balance)
+// 	if err != nil {
+// 		fmt.Printf("Got error: %v\n", err)
+// 		return
+// 	}
+// 	fmt.Printf("New balance is: %v. Total number of line items is now %v\n", newBalance, len(newItems))
+// }
+
+// ################################################################
+
+// PARAMETRIC CONSTRAINTS
+// Your interface definitions, which can later be used as constraints, can accept type parameters as well.
+
+// // The store interface represents a store that sells products.
+// // It takes a type parameter P that represents the type of products the store sells.
+// type store[P product] interface {
+// 	Sell(P)
+// }
+
+// type product interface {
+// 	Price() float64
+// 	Name() string
+// }
+
+// type book struct {
+// 	title  string
+// 	author string
+// 	price  float64
+// }
+
+// func (b book) Price() float64 {
+// 	return b.price
+// }
+
+// func (b book) Name() string {
+// 	return fmt.Sprintf("%s by %s", b.title, b.author)
+// }
+
+// type toy struct {
+// 	name  string
+// 	price float64
+// }
+
+// func (t toy) Price() float64 {
+// 	return t.price
+// }
+
+// func (t toy) Name() string {
+// 	return t.name
+// }
+
+// // The bookStore struct represents a store that sells books.
+// type bookStore struct {
+// 	booksSold []book
+// }
+
+// // Sell adds a book to the bookStore's inventory.
+// func (bs *bookStore) Sell(b book) {
+// 	bs.booksSold = append(bs.booksSold, b)
+// }
+
+// // The toyStore struct represents a store that sells toys.
+// type toyStore struct {
+// 	toysSold []toy
+// }
+
+// // Sell adds a toy to the toyStore's inventory.
+// func (ts *toyStore) Sell(t toy) {
+// 	ts.toysSold = append(ts.toysSold, t)
+// }
+
+// // sellProducts takes a store and a slice of products and sells
+// // each product one by one.
+// func sellProducts[P product](s store[P], products []P) {
+// 	for _, p := range products {
+// 		s.Sell(p)
+// 	}
+// }
+
+// func main() {
+// 	bs := bookStore{
+// 		booksSold: []book{},
+// 	}
+
+//     // By passing in "book" as a type parameter, we can use the sellProducts function to sell books in a bookStore
+// 	sellProducts[book](&bs, []book{
+// 		{
+// 			title:  "The Hobbit",
+// 			author: "J.R.R. Tolkien",
+// 			price:  10.0,
+// 		},
+// 		{
+// 			title:  "The Lord of the Rings",
+// 			author: "J.R.R. Tolkien",
+// 			price:  20.0,
+// 		},
+// 	})
+// 	fmt.Println(bs.booksSold)
+
+//     // We can then do the same for toys
+// 	ts := toyStore{
+// 		toysSold: []toy{},
+// 	}
+// 	sellProducts[toy](&ts, []toy{
+// 		{
+// 			name:  "Lego",
+// 			price: 10.0,
+// 		},
+// 		{
+// 			name:  "Barbie",
+// 			price: 20.0,
+// 		},
+// 	})
+// 	fmt.Println(ts.toysSold)
+// }
+
+// ===============================
+
+// ?
+type biller[C customer] interface {
+	Charge(C) bill
+	Name() string
 }
 
 // don't edit below this line
 
-type lineItem interface {
-	GetCost() float64
-	GetName() string
+type userBiller struct {
+	Plan string
 }
 
-type subscription struct {
-	userEmail string
-	startDate time.Time
-	interval  string
-}
-
-func (s subscription) GetName() string {
-	return fmt.Sprintf("%s subscription", s.interval)
-}
-
-func (s subscription) GetCost() float64 {
-	if s.interval == "monthly" {
-		return 25.00
+func (ub userBiller) Charge(u user) bill {
+	amount := 50.0
+	if ub.Plan == "pro" {
+		amount = 100.0
 	}
-	if s.interval == "yearly" {
-		return 250.00
+	return bill{
+		Customer: u,
+		Amount:   amount,
 	}
-	return 0.0
 }
 
-type oneTimeUsagePlan struct {
-	userEmail        string
-	numEmailsAllowed int
+func (sb userBiller) Name() string {
+	return fmt.Sprintf("%s user biller", sb.Plan)
 }
 
-func (otup oneTimeUsagePlan) GetName() string {
-	return fmt.Sprintf("one time usage plan with %v emails", otup.numEmailsAllowed)
+type orgBiller struct {
+	Plan string
 }
 
-func (otup oneTimeUsagePlan) GetCost() float64 {
-	const costPerEmail = 0.03
-	return float64(otup.numEmailsAllowed) * costPerEmail
+func (ob orgBiller) Name() string {
+	return fmt.Sprintf("%s org biller", ob.Plan)
+}
+
+func (ob orgBiller) Charge(o org) bill {
+	amount := 2000.0
+	if ob.Plan == "pro" {
+		amount = 3000.0
+	}
+	return bill{
+		Customer: o,
+		Amount:   amount,
+	}
+}
+
+type customer interface {
+	GetBillingEmail() string
+}
+
+type bill struct {
+	Customer customer
+	Amount   float64
+}
+
+type user struct {
+	UserEmail string
+}
+
+func (u user) GetBillingEmail() string {
+	return u.UserEmail
+}
+
+type org struct {
+	Admin user
+	Name  string
+}
+
+func (o org) GetBillingEmail() string {
+	return o.Admin.GetBillingEmail()
 }
 
 func main() {
-	test(subscription{
-		userEmail: "john@example.com",
-		startDate: time.Now().UTC(),
-		interval:  "yearly",
-	},
-		[]subscription{},
-		1000.00,
+	testBiller[user](
+		userBiller{Plan: "basic"},
+		user{UserEmail: "joe@example.com"},
 	)
-	test(subscription{
-		userEmail: "jane@example.com",
-		startDate: time.Now().UTC(),
-		interval:  "monthly",
-	},
-		[]subscription{
-			{
-				userEmail: "jane@example.com",
-				startDate: time.Now().UTC().Add(-time.Hour * 24 * 7),
-				interval:  "monthly",
-			},
-			{
-				userEmail: "jane@example.com",
-				startDate: time.Now().UTC().Add(-time.Hour * 24 * 7 * 52 * 2),
-				interval:  "yearly",
-			},
-		},
-		686.20,
+	testBiller[user](
+		userBiller{Plan: "basic"},
+		user{UserEmail: "samuel.boggs@example.com"},
 	)
-	test(oneTimeUsagePlan{
-		userEmail:        "dillon@example.com",
-		numEmailsAllowed: 5000,
-	},
-		[]oneTimeUsagePlan{},
-		756.20,
+	testBiller[user](
+		userBiller{Plan: "pro"},
+		user{UserEmail: "jade.row@example.com"},
 	)
-	test(oneTimeUsagePlan{
-		userEmail:        "dalton@example.com",
-		numEmailsAllowed: 100000,
-	},
-		[]oneTimeUsagePlan{
-			{
-				userEmail:        "dalton@example.com",
-				numEmailsAllowed: 34200,
-			},
-		},
-		32.20,
+	testBiller[org](
+		orgBiller{Plan: "basic"},
+		org{Admin: user{UserEmail: "challis.rane@example.com"}},
+	)
+	testBiller[org](
+		orgBiller{Plan: "pro"},
+		org{Admin: user{UserEmail: "challis.rane@example.com"}},
 	)
 }
 
-func test[T lineItem](newItem T, oldItems []T, balance float64) {
+func testBiller[C customer](b biller[C], c C) {
+	fmt.Printf("Using '%s' to create a bill for '%s'\n", b.Name(), c.GetBillingEmail())
+	bill := b.Charge(c)
+	fmt.Printf("Bill created for %v dollars\n", bill.Amount)
 	fmt.Println(" --- ")
-	fmt.Printf("Charging customer for a '%s', current balance is %v...\n", newItem.GetName(), balance)
-	newItems, newBalance, err := chargeForLineItem(newItem, oldItems, balance)
-	if err != nil {
-		fmt.Printf("Got error: %v\n", err)
-		return
-	}
-	fmt.Printf("New balance is: %v. Total number of line items is now %v\n", newBalance, len(newItems))
 }
