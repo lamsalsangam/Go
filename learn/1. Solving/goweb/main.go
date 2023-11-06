@@ -42,11 +42,28 @@ func main() {
 	}
 	defer db.Close()
 
-	// check db
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // check db
+	// err = db.Ping()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	fmt.Println("Connected!")
+	// fmt.Println("Connected!")
+
+	// {} represents the block of code which will have its own scope
+	// Creating the TABLE initally
+	{
+		query := `
+		CREATE TABLE IF NOT EXISTS users (
+			id SERIAL PRIMARY KEY,
+			username TEXT NOT NULL,
+			password TEXT NOT NULL,
+			created_at TIMESTAMPTZ
+		);`
+
+		_, err := db.Exec(query)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
