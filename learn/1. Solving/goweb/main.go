@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/joho/godotenv"
 	// We put the _ in the front so that the import doesnot disapper when saving
@@ -66,4 +67,33 @@ func main() {
 			log.Fatal(err)
 		}
 	}
+
+	{ //Insert a new user
+		username := "Happy"
+		password := "Home"
+		createdAt := time.Now()
+
+		_, err := db.Exec(`INSERT INTO users (username, password, created_at) VALUES ($1, $2, $3)`, username, password, createdAt)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	{ // Query a single user
+		var (
+			id        int
+			username  string
+			password  string
+			createdAt time.Time
+		)
+
+		query := "SELECT id, username, password, created_at FROM users WHERE id = $1"
+		err := db.QueryRow(query, 1).Scan(&id, &username, &password, &createdAt)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(id, username, password, createdAt)
+	}
+
 }
