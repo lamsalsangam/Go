@@ -127,4 +127,11 @@ func main() {
 
 		fmt.Printf("%#v", users)
 	}
+
+	{ // Delete a user
+		_, err := db.Exec(`DELETE FROM users WHERE id = $1`, 1)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
