@@ -22,6 +22,13 @@ const (
 	dbname   = "your_dbname"
 )
 
+// Todo represents a ToDo item
+type Todo struct {
+	ID          int    `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+}
+
 // InitDB initializes the database connection
 func InitDB() error {
 	mu.Lock()
@@ -54,4 +61,23 @@ func GetDB() (*sql.DB, error) {
 		return nil, fmt.Errorf("databse not initialized")
 	}
 	return db, nil
+}
+
+// GetTodos retrieves a list of all ToDo items from the database
+func GetTodos() ([]Todo, error) {
+	rows, err := db.Query("SELECT id, title, description FROM todos")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var todos []Todo
+	for rows.Next() {
+		var todo Todo
+		if err := rows.Scan(&todo.ID, &todo.Title, &todo.Description); err != nil {
+			return nil, err
+		}
+		todos = append(todos, todo)
+	}
+	return todos, nil
 }
