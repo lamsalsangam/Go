@@ -94,3 +94,12 @@ func GetTodoByID(id int) (*Todo, error) {
 	}
 	return &todo, nil
 }
+
+// InsertTodo inserts a new ToDo item into the database
+func InsertTodo(todo Todo) error {
+	_, err := db.Exec("INSERT INTO todos (title, description) VALUES ($1, $2)", todo.Title, todo.Description)
+	if err != nil {
+		return err
+	}
+	return nil
+}
