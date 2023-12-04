@@ -81,3 +81,16 @@ func GetTodos() ([]Todo, error) {
 	}
 	return todos, nil
 }
+
+// GetTodoByID retrieves a single ToDo item by ID from the database
+func GetTodoByID(id int) (*Todo, error) {
+	var todo Todo
+	err := db.QueryRow("SELECT id, title, description FROM todos WHERE id = $1", id).Scan(&todo.ID, &todo.Title, &todo.Description)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("Todo not found")
+		}
+		return nil, err
+	}
+	return &todo, nil
+}
