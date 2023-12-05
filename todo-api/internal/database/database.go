@@ -103,3 +103,20 @@ func InsertTodo(todo Todo) error {
 	}
 	return nil
 }
+
+// UpdateTodoByID updates a ToDo item in the database by ID
+func UpdateTodoByID(id int, todo Todo) error {
+	result, err := db.Exec("UPDATE todos SET title=$1, description=$2 WHERE id=$3", todo.Title, todo.Description, id)
+	if err != nil {
+		return err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("No todo found with ID %d", id)
+	}
+	return nil
+}
