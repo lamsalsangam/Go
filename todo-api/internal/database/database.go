@@ -120,3 +120,21 @@ func UpdateTodoByID(id int, todo Todo) error {
 	}
 	return nil
 }
+
+// DeleteTodoByID deletes a ToDo item from the database by ID
+func DeleteTodoByID(id int) error {
+	result, err := db.Exec("DELETE FROM todos WHERE id = $1", id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("No todo found with ID %d", id)
+	}
+	return nil
+}
