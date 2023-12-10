@@ -52,6 +52,31 @@ func GetTodo(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, todo)
 }
 
+// CreateTodo creates a new ToDo item
+func CreateTodo(w http.ResponseWriter, r *http.Request) {
+	var todo database.Todo
+	err := json.NewDecoder(r.Body).Decode(&todo)
+	if err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	err = database.InitDB()
+	if err != nil {
+		log.Printf("Error initializing the database: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	err = database.InsertTodo(todo)
+	if err != nil {
+		log.Printf("Error inserting todo:%v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
 // respondWithJSON sends a JSON response with the specified status code and data
 func respondWithJSON(w http.ResponseWriter, statusCode int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
