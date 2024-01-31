@@ -63,7 +63,7 @@ func main() {
 
 	ll.display()
 
-	k := 2
+	k := 3
 	kthToLast, found := findKthToLast(ll, k)
 
 	if found {
