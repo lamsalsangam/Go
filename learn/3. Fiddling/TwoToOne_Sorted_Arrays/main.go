@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"slices"
 )
 
 func mergedSortedArrays(arr1 []int, arr2 []int) []int {
@@ -22,7 +21,16 @@ func mergedSortedArrays(arr1 []int, arr2 []int) []int {
 	// 	i++
 	// }
 
-	slices.Sort(merged)
+	// slices.Sort(merged)
+	n := len(merged)
+	for i := 0; i < n-1; i++ {
+		for j := 0; j < n-i-1; j++ {
+			if merged[j] > merged[j+1] {
+				// Swap elements if they are in the wrong order
+				merged[j], merged[j+1] = merged[j+1], merged[j]
+			}
+		}
+	}
 
 	return merged
 }
