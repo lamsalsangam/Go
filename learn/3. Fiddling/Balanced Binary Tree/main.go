@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 // Node structure
@@ -22,7 +23,7 @@ func isBalanced(root *Node) bool {
 	rightHeight := getHeight(root.right)
 
 	// Check if the difference between heights is within 1
-	if abs(leftHeight-rightHeight) > 1 {
+	if math.Abs(float64(leftHeight)-float64(rightHeight)) > 1 {
 		return false
 	}
 
