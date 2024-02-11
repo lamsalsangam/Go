@@ -12,11 +12,10 @@ func main() {
 	// the log entry prefix and a flag to disable printing
 	// the time, source file, and line number.
 	log.SetPrefix("greetings: ")
-	// log.SetFlags(0) --> greetings: 2024/02/10 15:15:23 empty name
-	log.SetFlags(0) // --> greetings: empty name
+	log.SetFlags(0)
 
 	// Request a greeting message.
-	message, err := greetings.Hello("")
+	message, err := greetings.Hello("Gladys")
 	// If an error was returned, print it to the console and
 	// exit the program.
 	if err != nil {
